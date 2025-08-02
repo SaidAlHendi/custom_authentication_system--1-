@@ -95,12 +95,7 @@ export default function LoginForm({ onLogin, onSwitchToSignup }: LoginFormProps)
         </button>
       </div>
 
-      <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-        <p className="text-xs text-yellow-800">
-          ⚠️ <strong>Security Warning:</strong> This system stores passwords in plaintext for testing purposes only. 
-          Never use this in production!
-        </p>
-      </div>
+
     </div>
   );
 }

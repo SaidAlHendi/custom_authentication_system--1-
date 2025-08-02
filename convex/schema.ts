@@ -54,6 +54,7 @@ const applicationTables = {
     keys: v.optional(v.array(v.object({
       type: v.string(),
       count: v.number(),
+      customType: v.optional(v.string()),
       images: v.optional(v.array(v.id("_storage"))),
     }))),
     rooms: v.optional(v.array(v.object({
@@ -66,6 +67,7 @@ const applicationTables = {
       type: v.string(),
       number: v.string(),
       reading: v.string(),
+      customType: v.optional(v.string()),
       images: v.optional(v.array(v.id("_storage"))),
     }))),
   })
@@ -80,11 +82,13 @@ const applicationTables = {
       v.literal("rooms"), 
       v.literal("meters")
     ),
+    sectionIndex: v.optional(v.number()), // Index des spezifischen Elements
     storageId: v.id("_storage"),
     filename: v.string(),
     createdAt: v.number(),
   })
     .index("by_object_and_section", ["objectId", "section"])
+    .index("by_object_section_and_index", ["objectId", "section", "sectionIndex"])
     .index("by_storage", ["storageId"]),
 };
 
