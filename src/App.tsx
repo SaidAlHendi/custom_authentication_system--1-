@@ -142,7 +142,6 @@ export default function App() {
   if (!authState.user && !['login', 'signup'].includes(currentView)) {
     setCurrentView('login')
   }
-  console.log(authState.user)
   return (
     <div className='min-h-screen bg-gray-50'>
       {authState.user && (
