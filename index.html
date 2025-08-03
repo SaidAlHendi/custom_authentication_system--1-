@@ -1,16 +1,126 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary Meta Tags -->
+    <title>ObjectFlow - Professionelle Objektverwaltung</title>
+    <meta name="title" content="ObjectFlow - Professionelle Objektverwaltung" />
+    <meta
+      name="description"
+      content="Moderne Objektverwaltungssoftware für Immobilien, Schlüssel, Räume und Zähler. Effiziente Verwaltung mit mobilem Zugriff und PDF-Export."
+    />
+    <meta
+      name="keywords"
+      content="Objektverwaltung, Immobilienverwaltung, Schlüsselverwaltung, Facility Management, Property Management, Hausverwaltung"
+    />
+    <meta name="author" content="ObjectFlow Team" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Theme and App Configuration -->
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="application-name" content="ObjectFlow" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://objectflow.app/" />
+    <meta
+      property="og:title"
+      content="ObjectFlow - Professionelle Objektverwaltung"
+    />
+    <meta
+      property="og:description"
+      content="Moderne Objektverwaltungssoftware für Immobilien, Schlüssel, Räume und Zähler. Effiziente Verwaltung mit mobilem Zugriff und PDF-Export."
+    />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="ObjectFlow Dashboard Screenshot" />
+    <meta property="og:site_name" content="ObjectFlow" />
+    <meta property="og:locale" content="de_DE" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://objectflow.app/" />
+    <meta
+      property="twitter:title"
+      content="ObjectFlow - Professionelle Objektverwaltung"
+    />
+    <meta
+      property="twitter:description"
+      content="Moderne Objektverwaltungssoftware für Immobilien, Schlüssel, Räume und Zähler. Effiziente Verwaltung mit mobilem Zugriff und PDF-Export."
+    />
+    <meta property="twitter:image" content="/og-image.png" />
+    <meta
+      property="twitter:image:alt"
+      content="ObjectFlow Dashboard Screenshot"
+    />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/src/index.css" as="style" />
+    <link rel="preload" href="/src/main.tsx" as="script" />
+
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="/src/index.css" />
 
-    <title>Chef</title>
-
-    <meta property="og:image" content="/og-preview.png" />
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "ObjectFlow",
+        "description": "Professionelle Objektverwaltungssoftware für Immobilien und Facility Management",
+        "url": "https://objectflow.app",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "EUR"
+        },
+        "creator": {
+          "@type": "Organization",
+          "name": "ObjectFlow Team"
+        },
+        "featureList": [
+          "Objektverwaltung",
+          "Schlüsselverwaltung",
+          "Raumverwaltung",
+          "Zählerverwaltung",
+          "PDF Export",
+          "Mobile Optimierung",
+          "Benutzerverwaltung"
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration)
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError)
+            })
+        })
+      }
+    </script>
   </body>
 </html>

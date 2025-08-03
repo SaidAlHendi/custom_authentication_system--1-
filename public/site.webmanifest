@@ -1,0 +1,24 @@
+{
+  "name": "ObjectFlow - Objektverwaltung",
+  "short_name": "ObjectFlow",
+  "description": "Professionelle Objektverwaltungssoftware für Immobilien und Facility Management",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "categories": ["business", "productivity", "utilities"],
+  "lang": "de",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
