@@ -15,6 +15,25 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { generateObjectPDF } from '../utils/pdfExport'
 import { MultiSelect } from './ui/multi-select'
 import { getGermanErrorMessage } from '@/utils/errorHandler'
+import {
+  Plus,
+  Search,
+  Edit,
+  Trash2,
+  FileText,
+  MapPin,
+  Users,
+  Building,
+} from 'lucide-react'
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
 
 type User = {
   _id: string
@@ -193,69 +212,165 @@ export default function ObjectDashboard({
 
     return false
   }
-
   return (
-    <div className='max-w-7xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8'>
-      <div className='bg-white shadow rounded-lg p-4 sm:p-6'>
-        <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4'>
-          <h1 className='text-2xl font-bold text-gray-900'>Objektverwaltung</h1>
-          <Button
-            onClick={() => setShowCreateForm(true)}
-            className='w-full sm:w-auto'
-            variant='default'
-          >
-            Neues Objekt
-          </Button>
-        </div>
-
-        {/* Filters */}
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6'>
-          <div>
-            <Input
-              type='text'
-              placeholder='Suche (min. 3 Zeichen)...'
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-
-          {user.role === 'admin' && (
-            <>
+    <div className='min-h-screen bg-gray-50 p-4'>
+      <div className='max-w-7xl mx-auto space-y-6'>
+        {/* Header */}
+        <Card>
+          <CardHeader>
+            <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4'>
               <div>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder='Alle Status' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value='all'>Alle Status</SelectItem>
-                    {Object.entries(statusLabels).map(([key, label]) => (
-                      <SelectItem key={key} value={key}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <CardTitle className='text-xl sm:text-2xl flex items-center gap-2'>
+                  <Building className='w-6 h-6' />
+                  Objektverwaltung
+                </CardTitle>
+                <p className='text-sm text-muted-foreground mt-1'>
+                  Verwalten Sie Ihre Objekte und deren Status
+                </p>
+              </div>
+              <Dialog open={showCreateForm} onOpenChange={setShowCreateForm}>
+                <DialogTrigger asChild>
+                  <Button className='w-full sm:w-auto'>
+                    <Plus className='w-4 h-4 mr-2' />
+                    Neues Objekt
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className='max-w-md mx-4'>
+                  <DialogHeader>
+                    <DialogTitle>Neues Objekt erstellen</DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleCreateObject} className='space-y-4'>
+                    <div className='space-y-2'>
+                      <Label htmlFor='title'>Objektbezeichnung *</Label>
+                      <Input
+                        id='title'
+                        value={newObjectTitle}
+                        onChange={(e) => setNewObjectTitle(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className='space-y-2'>
+                      <Label htmlFor='street'>Straße *</Label>
+                      <Input
+                        id='street'
+                        value={newObjectStreet}
+                        onChange={(e) => setNewObjectStreet(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className='grid grid-cols-2 gap-2'>
+                      <div className='space-y-2'>
+                        <Label htmlFor='zipCode'>PLZ *</Label>
+                        <Input
+                          id='zipCode'
+                          value={newObjectZipCode}
+                          onChange={(e) => setNewObjectZipCode(e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className='space-y-2'>
+                        <Label htmlFor='city'>Ort *</Label>
+                        <Input
+                          id='city'
+                          value={newObjectCity}
+                          onChange={(e) => setNewObjectCity(e.target.value)}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className='space-y-2'>
+                      <Label htmlFor='additional'>Adresszusatz</Label>
+                      <Input
+                        id='additional'
+                        value={newObjectAdditional}
+                        onChange={(e) => setNewObjectAdditional(e.target.value)}
+                      />
+                    </div>
+                    <div className='grid grid-cols-2 gap-2'>
+                      <div className='space-y-2'>
+                        <Label htmlFor='floor'>Etage</Label>
+                        <Input
+                          id='floor'
+                          type='number'
+                          value={newObjectFloor}
+                          onChange={(e) => setNewObjectFloor(e.target.value)}
+                        />
+                      </div>
+                      <div className='space-y-2'>
+                        <Label htmlFor='room'>Raum</Label>
+                        <Input
+                          id='room'
+                          value={newObjectRoom}
+                          onChange={(e) => setNewObjectRoom(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div className='flex gap-2 pt-4'>
+                      <Button type='submit' className='flex-1'>
+                        Erstellen
+                      </Button>
+                      <Button
+                        type='button'
+                        variant='outline'
+                        onClick={() => setShowCreateForm(false)}
+                        className='flex-1'
+                      >
+                        Abbrechen
+                      </Button>
+                    </div>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </CardHeader>
+
+          <CardContent>
+            {/* Filters */}
+            <div className='space-y-4'>
+              <div className='relative'>
+                <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4' />
+                <Input
+                  placeholder='Suche (min. 3 Zeichen)...'
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className='pl-10'
+                />
               </div>
 
-              <div>
-                <Select value={userFilter} onValueChange={setUserFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder='Alle Benutzer' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value='all'>Alle Benutzer</SelectItem>
-                    {users?.map((u) => (
-                      <SelectItem key={u._id} value={u._id}>
-                        {u.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </>
-          )}
-        </div>
+              {user.role === 'admin' && (
+                <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Alle Status' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value='all'>Alle Status</SelectItem>
+                      {Object.entries(statusLabels).map(([key, label]) => (
+                        <SelectItem key={key} value={key}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
+                  <Select value={userFilter} onValueChange={setUserFilter}>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Alle Benutzer' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value='all'>Alle Benutzer</SelectItem>
+                      {users?.map((u) => (
+                        <SelectItem key={u._id} value={u._id}>
+                          {u.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
         {/* Objects Cards */}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
           {objects?.map((object) => (
@@ -457,154 +572,22 @@ export default function ObjectDashboard({
             </Card>
           ))}
         </div>
-
         {objects?.length === 0 && (
-          <div className='text-center py-12'>
-            <div className='text-gray-500 text-lg'>Keine Objekte gefunden</div>
-            <div className='text-gray-400 text-sm mt-2'>
-              {search || statusFilter !== 'all' || userFilter !== 'all'
-                ? 'Versuchen Sie andere Filtereinstellungen'
-                : 'Erstellen Sie Ihr erstes Objekt'}
-            </div>
-          </div>
+          <Card>
+            <CardContent className='text-center py-12'>
+              <Building className='w-12 h-12 text-gray-400 mx-auto mb-4' />
+              <div className='text-gray-500 text-lg mb-2'>
+                Keine Objekte gefunden
+              </div>
+              <div className='text-gray-400 text-sm'>
+                {search || statusFilter !== 'all' || userFilter !== 'all'
+                  ? 'Versuchen Sie andere Filtereinstellungen'
+                  : 'Erstellen Sie Ihr erstes Objekt'}
+              </div>
+            </CardContent>
+          </Card>
         )}
       </div>
-
-      {/* Create Object Modal */}
-      {showCreateForm && (
-        <div className='fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50'>
-          <div className='relative top-4 mx-auto p-5 border w-11/12 max-w-md shadow-lg rounded-md bg-white'>
-            <h3 className='text-lg font-bold text-gray-900 mb-4'>
-              Neues Objekt erstellen
-            </h3>
-            <form onSubmit={handleCreateObject} className='space-y-4'>
-              <div>
-                <label className='block text-sm font-medium text-gray-700'>
-                  Objektbezeichnung *
-                </label>
-                <input
-                  type='text'
-                  value={newObjectTitle}
-                  onChange={(e) => setNewObjectTitle(e.target.value)}
-                  required
-                  className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'
-                />
-              </div>
-
-              <div>
-                <label className='block text-sm font-medium text-gray-700'>
-                  Straße *
-                </label>
-                <input
-                  type='text'
-                  value={newObjectStreet}
-                  onChange={(e) => setNewObjectStreet(e.target.value)}
-                  required
-                  className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'
-                />
-              </div>
-
-              <div className='grid grid-cols-2 gap-2'>
-                <div>
-                  <label className='block text-sm font-medium text-gray-700'>
-                    PLZ *
-                  </label>
-                  <input
-                    type='text'
-                    value={newObjectZipCode}
-                    onChange={(e) => setNewObjectZipCode(e.target.value)}
-                    required
-                    className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'
-                  />
-                </div>
-                <div>
-                  <label className='block text-sm font-medium text-gray-700'>
-                    Ort *
-                  </label>
-                  <input
-                    type='text'
-                    value={newObjectCity}
-                    onChange={(e) => setNewObjectCity(e.target.value)}
-                    required
-                    className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className='block text-sm font-medium text-gray-700'>
-                  Adresszusatz
-                </label>
-                <input
-                  type='text'
-                  value={newObjectAdditional}
-                  onChange={(e) => setNewObjectAdditional(e.target.value)}
-                  className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'
-                />
-              </div>
-
-              <div className='grid grid-cols-2 gap-2'>
-                <div>
-                  <label className='block text-sm font-medium text-gray-700'>
-                    Etage
-                  </label>
-                  <input
-                    type='number'
-                    value={newObjectFloor}
-                    onChange={(e) => setNewObjectFloor(e.target.value)}
-                    className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'
-                  />
-                </div>
-                <div>
-                  <label className='block text-sm font-medium text-gray-700'>
-                    Raum
-                  </label>
-                  <input
-                    type='text'
-                    value={newObjectRoom}
-                    onChange={(e) => setNewObjectRoom(e.target.value)}
-                    className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className='block text-sm font-medium text-gray-700'>
-                  Zugewiesene Benutzer
-                </label>
-                <MultiSelect
-                  options={
-                    users?.map((u) => ({
-                      value: u._id,
-                      label: `${u.name} (${u.email})`,
-                    })) || []
-                  }
-                  selected={selectedUsers}
-                  onChange={setSelectedUsers}
-                  placeholder='Benutzer auswählen...'
-                  className='mt-1'
-                />
-              </div>
-
-              <div className='flex space-x-2'>
-                <button
-                  type='submit'
-                  className='flex-1 bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700'
-                >
-                  Erstellen
-                </button>
-                <button
-                  type='button'
-                  onClick={() => setShowCreateForm(false)}
-                  className='flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-400'
-                >
-                  Abbrechen
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

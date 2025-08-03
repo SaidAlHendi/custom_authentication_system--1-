@@ -3,7 +3,12 @@ import { useMutation } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import { toast } from 'sonner'
 import { getGermanErrorMessage } from '@/utils/errorHandler'
-
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Badge } from '@/components/ui/badge'
+import { User, Lock, Eye, EyeOff } from 'lucide-react'
 type User = {
   _id: string
   email: string
@@ -24,6 +29,8 @@ export default function Profile({ user, token }: ProfileProps) {
   const [newPassword, setNewPassword] = useState('')
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false)
   const [isChangingPassword, setIsChangingPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showOldPassword, setShowOldPassword] = useState(false)
 
   const updateProfile = useMutation(api.customAuth.updateProfile)
   const changePassword = useMutation(api.customAuth.changePassword)
@@ -65,118 +72,140 @@ export default function Profile({ user, token }: ProfileProps) {
   }
 
   return (
-    <div className='max-w-2xl mx-auto space-y-6'>
-      {/* Profile Information */}
-      <div className='bg-white shadow rounded-lg p-6'>
-        <h2 className='text-xl font-bold text-gray-900 mb-6'>
-          Profile Information
-        </h2>
+    <div className='min-h-screen bg-gray-50 p-4'>
+      <div className='max-w-2xl mx-auto space-y-6'>
+        {/* Profile Information */}
+        <Card>
+          <CardHeader>
+            <CardTitle className='flex items-center gap-2'>
+              <User className='w-5 h-5' />
+              Profil-Informationen
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleUpdateProfile} className='space-y-4'>
+              <div className='space-y-2'>
+                <Label htmlFor='email'>E-Mail</Label>
+                <Input
+                  id='email'
+                  type='email'
+                  value={user.email}
+                  disabled
+                  className='bg-gray-50'
+                />
+                <p className='text-xs text-muted-foreground'>
+                  E-Mail kann nicht geändert werden
+                </p>
+              </div>
 
-        <form onSubmit={handleUpdateProfile} className='space-y-4'>
-          <div>
-            <label
-              htmlFor='email'
-              className='block text-sm font-medium text-gray-700'
-            >
-              Email
-            </label>
-            <input
-              id='email'
-              type='email'
-              value={user.email}
-              disabled
-              className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-500'
-            />
-            <p className='text-xs text-gray-500 mt-1'>
-              Email cannot be changed
-            </p>
-          </div>
+              <div className='space-y-2'>
+                <Label htmlFor='name'>Vollständiger Name</Label>
+                <Input
+                  id='name'
+                  type='text'
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
 
-          <div>
-            <label
-              htmlFor='name'
-              className='block text-sm font-medium text-gray-700'
-            >
-              Full Name
-            </label>
-            <input
-              id='name'
-              type='text'
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'
-            />
-          </div>
+              <div className='space-y-2'>
+                <Label>Rolle</Label>
+                <div>
+                  <Badge variant='destructive'>
+                    {user.role === 'admin' ? 'Administrator' : 'Benutzer'}
+                  </Badge>
+                </div>
+              </div>
 
-          <div>
-            <label className='block text-sm font-medium text-gray-700'>
-              Role
-            </label>
-            <span className='mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800'>
-              {user.role}
-            </span>
-          </div>
+              <Button
+                type='submit'
+                disabled={isUpdatingProfile}
+                className='w-full'
+              >
+                {isUpdatingProfile
+                  ? 'Wird aktualisiert...'
+                  : 'Profil aktualisieren'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
 
-          <button
-            type='submit'
-            disabled={isUpdatingProfile}
-            className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50'
-          >
-            {isUpdatingProfile ? 'Updating...' : 'Update Profile'}
-          </button>
-        </form>
-      </div>
+        {/* Change Password */}
+        <Card>
+          <CardHeader>
+            <CardTitle className='flex items-center gap-2'>
+              <Lock className='w-5 h-5' />
+              Passwort ändern
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleChangePassword} className='space-y-4'>
+              <div className='space-y-2'>
+                <Label htmlFor='oldPassword'>Aktuelles Passwort</Label>
+                <div className='relative'>
+                  <Input
+                    id='oldPassword'
+                    type={showOldPassword ? 'text' : 'password'}
+                    value={oldPassword}
+                    onChange={(e) => setOldPassword(e.target.value)}
+                    required
+                    className='pr-10'
+                  />
+                  <Button
+                    type='button'
+                    variant='ghost'
+                    size='sm'
+                    className='absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent'
+                    onClick={() => setShowOldPassword(!showOldPassword)}
+                  >
+                    {showOldPassword ? (
+                      <EyeOff className='h-4 w-4' />
+                    ) : (
+                      <Eye className='h-4 w-4' />
+                    )}
+                  </Button>
+                </div>
+              </div>
 
-      {/* Change Password */}
-      <div className='bg-white shadow rounded-lg p-6'>
-        <h2 className='text-xl font-bold text-gray-900 mb-6'>
-          Change Password
-        </h2>
+              <div className='space-y-2'>
+                <Label htmlFor='newPassword'>Neues Passwort</Label>
+                <div className='relative'>
+                  <Input
+                    id='newPassword'
+                    type={showNewPassword ? 'text' : 'password'}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    className='pr-10'
+                  />
+                  <Button
+                    type='button'
+                    variant='ghost'
+                    size='sm'
+                    className='absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent'
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                  >
+                    {showNewPassword ? (
+                      <EyeOff className='h-4 w-4' />
+                    ) : (
+                      <Eye className='h-4 w-4' />
+                    )}
+                  </Button>
+                </div>
+              </div>
 
-        <form onSubmit={handleChangePassword} className='space-y-4'>
-          <div>
-            <label
-              htmlFor='oldPassword'
-              className='block text-sm font-medium text-gray-700'
-            >
-              Current Password
-            </label>
-            <input
-              id='oldPassword'
-              type='password'
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-              required
-              className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor='newPassword'
-              className='block text-sm font-medium text-gray-700'
-            >
-              New Password
-            </label>
-            <input
-              id='newPassword'
-              type='password'
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-              className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'
-            />
-          </div>
-
-          <button
-            type='submit'
-            disabled={isChangingPassword}
-            className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50'
-          >
-            {isChangingPassword ? 'Changing...' : 'Change Password'}
-          </button>
-        </form>
+              <Button
+                type='submit'
+                disabled={isChangingPassword}
+                variant='destructive'
+                className='w-full'
+              >
+                {isChangingPassword ? 'Wird geändert...' : 'Passwort ändern'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

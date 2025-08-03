@@ -211,12 +211,12 @@ export default function App() {
             onSwitchToSignup={() => setCurrentView('signup')}
           />
         )}
-        {currentView === 'signup' && (
+        {/*         {currentView === 'signup' && (
           <SignupForm
             onSignup={handleLogin}
             onSwitchToLogin={() => setCurrentView('login')}
           />
-        )}
+        )} */}
         {currentView === 'change-password' && authState.token && (
           <ChangePassword
             token={authState.token}
